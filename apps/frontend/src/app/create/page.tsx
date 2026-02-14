@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CreateTokenForm } from "./_components/create-token-form";
 
 export const metadata: Metadata = {
   title: "Create Token",
@@ -12,6 +13,7 @@ export default function CreateTokenPage() {
       <p className="mt-2 text-zinc-400">
         Configure and deploy your ERC-20 token on the Base network.
       </p>
+      <CreateTokenForm />
     </div>
   );
 }
