@@ -1,10 +1,6 @@
 import { formatUnits } from "viem";
 import { type TokenInfo } from "@/hooks/use-user-tokens";
-
-const EXPLORER_URLS: Record<number, string> = {
-  84532: "https://sepolia.basescan.org",
-  8453: "https://basescan.org",
-};
+import { getExplorerUrl } from "@/lib/constants";
 
 type TokenCardProps = {
   token: TokenInfo;
@@ -12,7 +8,7 @@ type TokenCardProps = {
 };
 
 export function TokenCard({ token, chainId }: TokenCardProps) {
-  const explorerUrl = chainId ? EXPLORER_URLS[chainId] : null;
+  const explorerUrl = getExplorerUrl(chainId);
   const tokenUrl = explorerUrl ? `${explorerUrl}/token/${token.address}` : null;
 
   const features = [

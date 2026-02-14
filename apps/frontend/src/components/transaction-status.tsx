@@ -1,11 +1,9 @@
 "use client";
 
 import { type BaseError } from "wagmi";
-
-const EXPLORER_URLS: Record<number, string> = {
-  84532: "https://sepolia.basescan.org",
-  8453: "https://basescan.org",
-};
+import { Spinner } from "@/components/ui/spinner";
+import { SuccessIcon, ErrorIcon } from "@/components/ui/icons";
+import { getExplorerUrl } from "@/lib/constants";
 
 type TransactionStatusProps = {
   hash: `0x${string}`;
@@ -28,7 +26,7 @@ export function TransactionStatus({
   chainId,
   tokenAddress,
 }: TransactionStatusProps) {
-  const explorerUrl = chainId ? EXPLORER_URLS[chainId] : null;
+  const explorerUrl = getExplorerUrl(chainId);
   const txUrl = explorerUrl ? `${explorerUrl}/tx/${hash}` : null;
   const tokenUrl =
     explorerUrl && tokenAddress
@@ -158,47 +156,5 @@ export function TransactionStatus({
         </button>
       )}
     </div>
-  );
-}
-
-function Spinner() {
-  return (
-    <div className="h-10 w-10 animate-spin rounded-full border-4 border-zinc-700 border-t-white" />
-  );
-}
-
-function SuccessIcon() {
-  return (
-    <svg
-      className="h-10 w-10 text-green-400"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
-    </svg>
-  );
-}
-
-function ErrorIcon() {
-  return (
-    <svg
-      className="h-10 w-10 text-red-400"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
-    </svg>
   );
 }

@@ -7,7 +7,7 @@ import { useCreateToken, type CreateTokenInput } from "@/hooks/use-create-token"
 import { addresses } from "@repo/contracts-abi/addresses";
 import { Field } from "@/components/field";
 import { Toggle } from "@/components/toggle";
-import { TransactionStatus } from "./transaction-status";
+import { TransactionStatus } from "@/components/transaction-status";
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 

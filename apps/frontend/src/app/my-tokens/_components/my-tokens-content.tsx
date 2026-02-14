@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useUserTokens } from "@/hooks/use-user-tokens";
-import { TokenCard } from "./token-card";
+import { Spinner } from "@/components/ui/spinner";
+import { TokenCard } from "@/components/token-card";
 
 export function MyTokensContent() {
   const { isConnected, chainId } = useAccount();
@@ -41,7 +42,7 @@ export function MyTokensContent() {
       <div className="mt-8">
         {isLoading && (
           <div className="flex justify-center py-16">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-zinc-700 border-t-white" />
+            <Spinner className="h-8 w-8" />
           </div>
         )}
 
