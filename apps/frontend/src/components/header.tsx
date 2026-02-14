@@ -3,14 +3,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useAccount } from "wagmi";
 
 const navLinks = [
-  { href: "/create", label: "Create Token" },
-  { href: "/my-tokens", label: "My Tokens" },
+  { href: "/create", label: "Create Token", requiresAuth: false },
+  { href: "/my-tokens", label: "My Tokens", requiresAuth: true },
 ];
 
 export function Header() {
   const pathname = usePathname();
+  const { isConnected } = useAccount();
+
+  const visibleLinks = navLinks.filter(
+    (link) => !link.requiresAuth || isConnected,
+  );
 
   return (
     <header className="border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-sm">
@@ -20,7 +26,7 @@ export function Header() {
             EVM Token Creator
           </Link>
           <nav className="hidden items-center gap-1 sm:flex">
-            {navLinks.map((link) => (
+            {visibleLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
