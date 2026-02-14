@@ -33,7 +33,11 @@ export function useCreateToken() {
 
   function createToken(input: CreateTokenInput, chainId: number) {
     const factoryAddress = addresses[chainId]?.tokenFactory;
-    if (!factoryAddress) return;
+    if (
+      !factoryAddress ||
+      factoryAddress === "0x0000000000000000000000000000000000000000"
+    )
+      return;
 
     const initialSupply = parseUnits(input.initialSupply, 18);
     const cap = input.cap ? parseUnits(input.cap, 18) : BigInt(0);

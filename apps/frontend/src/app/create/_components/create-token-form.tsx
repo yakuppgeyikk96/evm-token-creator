@@ -4,9 +4,12 @@ import { useState, type FormEvent } from "react";
 import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useCreateToken, type CreateTokenInput } from "@/hooks/use-create-token";
+import { addresses } from "@repo/contracts-abi/addresses";
 import { Field } from "@/components/field";
 import { Toggle } from "@/components/toggle";
 import { TransactionStatus } from "./transaction-status";
+
+const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 const defaultForm: CreateTokenInput = {
   name: "",
@@ -20,6 +23,8 @@ const defaultForm: CreateTokenInput = {
 
 export function CreateTokenForm() {
   const { isConnected, chainId } = useAccount();
+  const factoryAddress = chainId ? addresses[chainId]?.tokenFactory : undefined;
+  const isDeployed = !!factoryAddress && factoryAddress !== ZERO_ADDRESS;
   const [form, setForm] = useState<CreateTokenInput>(defaultForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { createToken, hash, isPending, isConfirming, isConfirmed, error, reset } =
@@ -146,7 +151,15 @@ export function CreateTokenForm() {
       )}
 
       <div className="pt-2">
-        {isConnected ? (
+        {!isConnected ? (
+          <div className="flex justify-center">
+            <ConnectButton />
+          </div>
+        ) : !isDeployed ? (
+          <p className="text-center text-sm text-zinc-400">
+            Token Factory contract is not deployed on this network yet.
+          </p>
+        ) : (
           <button
             type="submit"
             disabled={isPending}
@@ -154,10 +167,6 @@ export function CreateTokenForm() {
           >
             {isPending ? "Confirm in wallet..." : "Create Token"}
           </button>
-        ) : (
-          <div className="flex justify-center">
-            <ConnectButton />
-          </div>
         )}
       </div>
     </form>

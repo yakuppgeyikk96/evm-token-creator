@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { MyTokensContent } from "./my-tokens-content";
+import { MyTokensContent } from "./_components/my-tokens-content";
 
 export const metadata: Metadata = {
   title: "My Tokens",
