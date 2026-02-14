@@ -1,0 +1,17 @@
+{
+  "name": "@repo/contracts-abi",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./abis": "./src/abis/index.ts",
+    "./addresses": "./src/addresses.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "sync-abis": "node scripts/sync-abis.mjs"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "typescript": "^5.9.2"
+  }
+}
