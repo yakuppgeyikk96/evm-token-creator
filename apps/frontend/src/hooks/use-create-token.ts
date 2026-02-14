@@ -2,7 +2,7 @@
 
 import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { type BaseError } from "wagmi";
-import { parseUnits } from "viem";
+import { parseUnits, parseEventLogs } from "viem";
 import { TokenFactoryAbi } from "@repo/contracts-abi/abis";
 import { addresses } from "@repo/contracts-abi/addresses";
 
@@ -64,13 +64,21 @@ export function useCreateToken() {
 
   const error = writeError as BaseError | null;
 
+  const createdTokenAddress = receipt
+    ? parseEventLogs({
+        abi: TokenFactoryAbi,
+        logs: receipt.logs,
+        eventName: "TokenCreated",
+      })[0]?.args?.tokenAddress
+    : undefined;
+
   return {
     createToken,
     hash,
     isPending,
     isConfirming,
     isConfirmed,
-    receipt,
+    createdTokenAddress,
     error,
     reset,
   };

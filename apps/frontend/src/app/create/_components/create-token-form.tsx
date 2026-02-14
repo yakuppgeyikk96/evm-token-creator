@@ -27,7 +27,7 @@ export function CreateTokenForm() {
   const isDeployed = !!factoryAddress && factoryAddress !== ZERO_ADDRESS;
   const [form, setForm] = useState<CreateTokenInput>(defaultForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const { createToken, hash, isPending, isConfirming, isConfirmed, error, reset } =
+  const { createToken, hash, isPending, isConfirming, isConfirmed, createdTokenAddress, error, reset } =
     useCreateToken();
 
   function validate(): boolean {
@@ -79,6 +79,7 @@ export function CreateTokenForm() {
         error={error}
         onReset={handleReset}
         chainId={chainId}
+        tokenAddress={createdTokenAddress}
       />
     );
   }

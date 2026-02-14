@@ -15,6 +15,7 @@ type TransactionStatusProps = {
   error: BaseError | null;
   onReset: () => void;
   chainId?: number;
+  tokenAddress?: `0x${string}`;
 };
 
 export function TransactionStatus({
@@ -25,9 +26,32 @@ export function TransactionStatus({
   error,
   onReset,
   chainId,
+  tokenAddress,
 }: TransactionStatusProps) {
   const explorerUrl = chainId ? EXPLORER_URLS[chainId] : null;
   const txUrl = explorerUrl ? `${explorerUrl}/tx/${hash}` : null;
+  const tokenUrl =
+    explorerUrl && tokenAddress
+      ? `${explorerUrl}/token/${tokenAddress}`
+      : null;
+
+  async function addToMetaMask() {
+    if (!tokenAddress || !window.ethereum) return;
+    try {
+      await window.ethereum.request({
+        method: "wallet_watchAsset",
+        params: {
+          type: "ERC20",
+          options: {
+            address: tokenAddress,
+            decimals: 18,
+          },
+        },
+      });
+    } catch {
+      // User rejected or wallet doesn't support it
+    }
+  }
 
   return (
     <div className="mt-8 space-y-6">
@@ -69,15 +93,44 @@ export function TransactionStatus({
               <p className="text-lg font-medium text-green-400">
                 Token created successfully!
               </p>
-              {txUrl && (
-                <a
-                  href={txUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-zinc-400 underline transition-colors hover:text-white"
+              {tokenAddress && (
+                <div className="w-full rounded-lg bg-zinc-800/50 p-3">
+                  <p className="text-xs text-zinc-400">Token Address</p>
+                  <p className="mt-1 break-all font-mono text-sm text-white">
+                    {tokenAddress}
+                  </p>
+                </div>
+              )}
+              <div className="flex flex-wrap justify-center gap-3">
+                {tokenUrl && (
+                  <a
+                    href={tokenUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-zinc-400 underline transition-colors hover:text-white"
+                  >
+                    View token on Basescan
+                  </a>
+                )}
+                {txUrl && (
+                  <a
+                    href={txUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-zinc-400 underline transition-colors hover:text-white"
+                  >
+                    View transaction
+                  </a>
+                )}
+              </div>
+              {tokenAddress && (
+                <button
+                  type="button"
+                  onClick={addToMetaMask}
+                  className="rounded-lg border border-zinc-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:border-zinc-500 hover:bg-zinc-800/50"
                 >
-                  View transaction on Basescan
-                </a>
+                  Add to MetaMask
+                </button>
               )}
             </>
           )}
