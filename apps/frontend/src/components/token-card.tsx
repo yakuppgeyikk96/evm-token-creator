@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { formatUnits } from "viem";
 import { type TokenInfo } from "@/hooks/use-user-tokens";
 import { getExplorerUrl } from "@/lib/constants";
@@ -18,7 +19,10 @@ export function TokenCard({ token, chainId }: TokenCardProps) {
   ].filter(Boolean);
 
   return (
-    <div className="rounded-lg border border-zinc-800 p-5 transition-colors hover:border-zinc-700">
+    <Link
+      href={`/token/${token.address}`}
+      className="block rounded-lg border border-zinc-800 p-5 transition-colors hover:border-zinc-700"
+    >
       <div className="flex items-start justify-between">
         <div>
           <h3 className="text-lg font-semibold">{token.name}</h3>
@@ -62,16 +66,18 @@ export function TokenCard({ token, chainId }: TokenCardProps) {
           {token.address.slice(0, 6)}...{token.address.slice(-4)}
         </span>
         {tokenUrl && (
-          <a
-            href={tokenUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          <span
+            role="link"
+            onClick={(e) => {
+              e.preventDefault();
+              window.open(tokenUrl, "_blank", "noopener,noreferrer");
+            }}
             className="text-xs text-zinc-400 underline transition-colors hover:text-white"
           >
             View on Basescan
-          </a>
+          </span>
         )}
       </div>
-    </div>
+    </Link>
   );
 }

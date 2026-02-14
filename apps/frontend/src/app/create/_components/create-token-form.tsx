@@ -80,6 +80,8 @@ export function CreateTokenForm() {
         onReset={handleReset}
         chainId={chainId}
         tokenAddress={createdTokenAddress}
+        successMessage="Token created successfully!"
+        resetLabel="Create another token"
       />
     );
   }

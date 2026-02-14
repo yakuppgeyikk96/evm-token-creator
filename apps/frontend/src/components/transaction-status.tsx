@@ -14,6 +14,8 @@ type TransactionStatusProps = {
   onReset: () => void;
   chainId?: number;
   tokenAddress?: `0x${string}`;
+  successMessage?: string;
+  resetLabel?: string;
 };
 
 export function TransactionStatus({
@@ -25,6 +27,8 @@ export function TransactionStatus({
   onReset,
   chainId,
   tokenAddress,
+  successMessage,
+  resetLabel,
 }: TransactionStatusProps) {
   const explorerUrl = getExplorerUrl(chainId);
   const txUrl = explorerUrl ? `${explorerUrl}/tx/${hash}` : null;
@@ -89,7 +93,7 @@ export function TransactionStatus({
             <>
               <SuccessIcon />
               <p className="text-lg font-medium text-green-400">
-                Token created successfully!
+                {successMessage ?? "Transaction successful!"}
               </p>
               {tokenAddress && (
                 <div className="w-full rounded-lg bg-zinc-800/50 p-3">
@@ -152,7 +156,7 @@ export function TransactionStatus({
           onClick={onReset}
           className="w-full rounded-lg border border-zinc-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:border-zinc-500 hover:bg-zinc-800/50"
         >
-          Create another token
+          {resetLabel ?? "Done"}
         </button>
       )}
     </div>
