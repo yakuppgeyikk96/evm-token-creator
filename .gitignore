@@ -27,6 +27,11 @@ out/
 build
 dist
 
+# Foundry
+apps/contracts/lib/
+apps/contracts/cache/
+apps/contracts/out/
+
 
 # Debug
 npm-debug.log*
@@ -36,3 +41,5 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+
+CLAUDE.md
