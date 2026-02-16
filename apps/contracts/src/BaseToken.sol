@@ -13,6 +13,13 @@ import {
 } from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
+interface ITokenFactory {
+    function onOwnershipTransferred(
+        address previousOwner,
+        address newOwner
+    ) external;
+}
+
 contract BaseToken is
     ERC20,
     ERC20Burnable,
@@ -27,6 +34,7 @@ contract BaseToken is
     }
 
     TokenConfig private _config;
+    address private immutable _factory;
 
     constructor(
         string memory name_,
@@ -34,13 +42,15 @@ contract BaseToken is
         uint256 initialSupply_,
         address owner_,
         uint256 cap_,
-        TokenConfig memory config_
+        TokenConfig memory config_,
+        address factory_
     )
         ERC20(name_, symbol_)
         ERC20Capped(cap_ == 0 ? type(uint256).max : cap_)
         Ownable(owner_)
     {
         _config = config_;
+        _factory = factory_;
         if (initialSupply_ > 0) {
             _mint(owner_, initialSupply_);
         }
@@ -73,6 +83,12 @@ contract BaseToken is
     function unpause() external onlyOwner {
         require(_config.isPausable, "BaseToken: pausing disabled");
         _unpause();
+    }
+
+    function transferOwnership(address newOwner) public override onlyOwner {
+        address previousOwner = owner();
+        super.transferOwnership(newOwner);
+        ITokenFactory(_factory).onOwnershipTransferred(previousOwner, newOwner);
     }
 
     function _update(

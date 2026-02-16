@@ -11,6 +11,8 @@ contract TokenFactory is Ownable {
 
     address[] private _allTokens;
     mapping(address creator => address[] tokens) private _tokensByCreator;
+    mapping(address owner => address[] tokens) private _tokensByOwner;
+    mapping(address token => bool) private _isRegisteredToken;
 
     // --- Events ---
 
@@ -52,12 +54,15 @@ contract TokenFactory is Ownable {
             params.initialSupply,
             msg.sender,
             params.cap,
-            params.config
+            params.config,
+            address(this)
         );
 
         address tokenAddress = address(token);
         _allTokens.push(tokenAddress);
         _tokensByCreator[msg.sender].push(tokenAddress);
+        _tokensByOwner[msg.sender].push(tokenAddress);
+        _isRegisteredToken[tokenAddress] = true;
 
         emit TokenCreated(
             tokenAddress,
@@ -71,12 +76,46 @@ contract TokenFactory is Ownable {
         return tokenAddress;
     }
 
+    // --- Ownership Tracking ---
+
+    function onOwnershipTransferred(
+        address previousOwner,
+        address newOwner
+    ) external {
+        require(
+            _isRegisteredToken[msg.sender],
+            "TokenFactory: not a registered token"
+        );
+        _removeTokenFromOwner(previousOwner, msg.sender);
+        _tokensByOwner[newOwner].push(msg.sender);
+    }
+
+    function _removeTokenFromOwner(
+        address ownerAddr,
+        address token
+    ) private {
+        address[] storage tokens = _tokensByOwner[ownerAddr];
+        for (uint256 i = 0; i < tokens.length; i++) {
+            if (tokens[i] == token) {
+                tokens[i] = tokens[tokens.length - 1];
+                tokens.pop();
+                return;
+            }
+        }
+    }
+
     // --- View Functions ---
 
     function getTokensByCreator(
         address creator
     ) external view returns (address[] memory) {
         return _tokensByCreator[creator];
+    }
+
+    function getTokensByOwner(
+        address ownerAddr
+    ) external view returns (address[] memory) {
+        return _tokensByOwner[ownerAddr];
     }
 
     function getAllTokens() external view returns (address[] memory) {

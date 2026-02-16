@@ -36,7 +36,7 @@ export function useUserTokens() {
   } = useReadContract({
     address: factoryAddress,
     abi: TokenFactoryAbi,
-    functionName: "getTokensByCreator",
+    functionName: "getTokensByOwner",
     args: address ? [address] : undefined,
     query: { enabled: !!address && isDeployed },
   });

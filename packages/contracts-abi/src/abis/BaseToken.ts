@@ -48,6 +48,11 @@ export const BaseTokenAbi = [
             "internalType": "bool"
           }
         ]
+      },
+      {
+        "name": "factory_",
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "stateMutability": "nonpayable"

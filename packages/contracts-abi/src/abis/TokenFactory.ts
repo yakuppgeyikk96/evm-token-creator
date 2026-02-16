@@ -127,6 +127,43 @@ export const TokenFactoryAbi = [
   },
   {
     "type": "function",
+    "name": "getTokensByOwner",
+    "inputs": [
+      {
+        "name": "ownerAddr",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address[]",
+        "internalType": "address[]"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "onOwnershipTransferred",
+    "inputs": [
+      {
+        "name": "previousOwner",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "newOwner",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "owner",
     "inputs": [],
     "outputs": [

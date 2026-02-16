@@ -322,6 +322,53 @@ contract TokenFactoryTest is Test {
         assertTrue(config.isPausable);
     }
 
+    // ========== Ownership Transfer Tracking ==========
+
+    function test_CreateTokenTracksOwner() public {
+        BaseToken token = _createDefaultToken();
+
+        address[] memory owned = factory.getTokensByOwner(alice);
+        assertEq(owned.length, 1);
+        assertEq(owned[0], address(token));
+    }
+
+    function test_TransferOwnershipUpdatesFactory() public {
+        BaseToken token = _createDefaultToken();
+
+        vm.prank(alice);
+        token.transferOwnership(bob);
+
+        // bob should now own the token
+        address[] memory bobOwned = factory.getTokensByOwner(bob);
+        assertEq(bobOwned.length, 1);
+        assertEq(bobOwned[0], address(token));
+
+        // alice should no longer own it
+        address[] memory aliceOwned = factory.getTokensByOwner(alice);
+        assertEq(aliceOwned.length, 0);
+
+        // token's owner should be bob
+        assertEq(token.owner(), bob);
+    }
+
+    function test_TransferOwnershipCreatorListUnchanged() public {
+        BaseToken token = _createDefaultToken();
+
+        vm.prank(alice);
+        token.transferOwnership(bob);
+
+        // creator list should still show alice
+        address[] memory created = factory.getTokensByCreator(alice);
+        assertEq(created.length, 1);
+        assertEq(created[0], address(token));
+    }
+
+    function test_OnOwnershipTransferredRevertWhenNotRegistered() public {
+        vm.prank(alice);
+        vm.expectRevert("TokenFactory: not a registered token");
+        factory.onOwnershipTransferred(alice, bob);
+    }
+
     // ========== ERC-20 Standard ==========
 
     function test_Transfer() public {
