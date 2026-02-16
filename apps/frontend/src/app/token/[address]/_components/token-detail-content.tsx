@@ -10,6 +10,7 @@ import { getExplorerUrl } from "@/lib/constants";
 import { MintForm } from "./mint-form";
 import { BurnForm } from "./burn-form";
 import { PauseControl } from "./pause-control";
+import { TransferForm } from "./transfer-form";
 import { TransferOwnershipForm } from "./transfer-ownership-form";
 
 const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
@@ -69,6 +70,7 @@ export function TokenDetailContent({ tokenAddress }: TokenDetailContentProps) {
   const showMint = token.isMintable && isOwner;
   const showBurn = token.isBurnable && hasBalance;
   const showPause = token.isPausable && isOwner;
+  const showTransfer = hasBalance;
   const showTransferOwnership = isOwner;
 
   const features = [
@@ -159,7 +161,7 @@ export function TokenDetailContent({ tokenAddress }: TokenDetailContentProps) {
           </div>
 
           {/* Management Section */}
-          {isConnected && (showMint || showBurn || showPause || showTransferOwnership) && (
+          {isConnected && (showMint || showBurn || showPause || showTransfer || showTransferOwnership) && (
             <div className="space-y-4 pt-4">
               <h2 className="text-lg font-semibold">Management</h2>
               {showMint && (
@@ -172,6 +174,15 @@ export function TokenDetailContent({ tokenAddress }: TokenDetailContentProps) {
               )}
               {showBurn && (
                 <BurnForm
+                  tokenAddress={tokenAddress}
+                  tokenSymbol={token.symbol}
+                  userBalance={token.userBalance}
+                  chainId={chainId}
+                  onSuccess={refetch}
+                />
+              )}
+              {showTransfer && (
+                <TransferForm
                   tokenAddress={tokenAddress}
                   tokenSymbol={token.symbol}
                   userBalance={token.userBalance}
