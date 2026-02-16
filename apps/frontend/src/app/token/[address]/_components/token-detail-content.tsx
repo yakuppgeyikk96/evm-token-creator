@@ -6,6 +6,7 @@ import { formatUnits } from "viem";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useTokenDetail } from "@/hooks/use-token-detail";
 import { Spinner } from "@/components/ui/spinner";
+import { Tabs, type Tab } from "@/components/ui/tabs";
 import { getExplorerUrl } from "@/lib/constants";
 import { MintForm } from "./mint-form";
 import { BurnForm } from "./burn-form";
@@ -78,6 +79,73 @@ export function TokenDetailContent({ tokenAddress }: TokenDetailContentProps) {
     token.isBurnable && "Burnable",
     token.isPausable && "Pausable",
   ].filter(Boolean);
+
+  const managementTabs = [
+    showMint && {
+      id: "mint",
+      label: "Mint",
+      content: (
+        <MintForm
+          tokenAddress={tokenAddress}
+          tokenSymbol={token.symbol}
+          chainId={chainId}
+          onSuccess={refetch}
+        />
+      ),
+    },
+    showBurn && {
+      id: "burn",
+      label: "Burn",
+      content: (
+        <BurnForm
+          tokenAddress={tokenAddress}
+          tokenSymbol={token.symbol}
+          userBalance={token.userBalance}
+          chainId={chainId}
+          onSuccess={refetch}
+        />
+      ),
+    },
+    showTransfer && {
+      id: "transfer",
+      label: "Transfer",
+      content: (
+        <TransferForm
+          tokenAddress={tokenAddress}
+          tokenSymbol={token.symbol}
+          userBalance={token.userBalance}
+          chainId={chainId}
+          onSuccess={refetch}
+        />
+      ),
+    },
+    showPause && {
+      id: "pause",
+      label: token.paused ? "Unpause" : "Pause",
+      content: (
+        <PauseControl
+          tokenAddress={tokenAddress}
+          tokenSymbol={token.symbol}
+          paused={token.paused}
+          chainId={chainId}
+          onSuccess={refetch}
+        />
+      ),
+    },
+    showTransferOwnership && {
+      id: "ownership",
+      label: "Ownership",
+      content: (
+        <TransferOwnershipForm
+          tokenAddress={tokenAddress}
+          tokenSymbol={token.symbol}
+          currentOwner={token.owner}
+          chainId={chainId}
+          onSuccess={refetch}
+        />
+      ),
+    },
+  ].filter(Boolean) as Tab[];
 
   return (
     <>
@@ -161,53 +229,10 @@ export function TokenDetailContent({ tokenAddress }: TokenDetailContentProps) {
           </div>
 
           {/* Management Section */}
-          {isConnected && (showMint || showBurn || showPause || showTransfer || showTransferOwnership) && (
-            <div className="space-y-4 pt-4">
-              <h2 className="text-lg font-semibold">Management</h2>
-              {showMint && (
-                <MintForm
-                  tokenAddress={tokenAddress}
-                  tokenSymbol={token.symbol}
-                  chainId={chainId}
-                  onSuccess={refetch}
-                />
-              )}
-              {showBurn && (
-                <BurnForm
-                  tokenAddress={tokenAddress}
-                  tokenSymbol={token.symbol}
-                  userBalance={token.userBalance}
-                  chainId={chainId}
-                  onSuccess={refetch}
-                />
-              )}
-              {showTransfer && (
-                <TransferForm
-                  tokenAddress={tokenAddress}
-                  tokenSymbol={token.symbol}
-                  userBalance={token.userBalance}
-                  chainId={chainId}
-                  onSuccess={refetch}
-                />
-              )}
-              {showPause && (
-                <PauseControl
-                  tokenAddress={tokenAddress}
-                  tokenSymbol={token.symbol}
-                  paused={token.paused}
-                  chainId={chainId}
-                  onSuccess={refetch}
-                />
-              )}
-              {showTransferOwnership && (
-                <TransferOwnershipForm
-                  tokenAddress={tokenAddress}
-                  tokenSymbol={token.symbol}
-                  currentOwner={token.owner}
-                  chainId={chainId}
-                  onSuccess={refetch}
-                />
-              )}
+          {isConnected && managementTabs.length > 0 && (
+            <div className="pt-4">
+              <h2 className="mb-4 text-lg font-semibold">Management</h2>
+              <Tabs tabs={managementTabs} />
             </div>
           )}
 

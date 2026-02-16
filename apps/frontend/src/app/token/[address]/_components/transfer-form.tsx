@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { formatUnits } from "viem";
 import { useTransferToken } from "@/hooks/use-transfer-token";
 import { Field } from "@/components/field";
@@ -35,28 +34,17 @@ export function TransferForm({ tokenAddress, tokenSymbol, userBalance, chainId, 
 
   if (hash) {
     return (
-      <div>
-        <Link
-          href="/my-tokens"
-          className="text-sm text-zinc-400 transition-colors hover:text-white"
-        >
-          &larr; Back to My Tokens
-        </Link>
-        <div className="mt-6">
-          <h1 className="text-2xl font-bold">Transfer {tokenSymbol}</h1>
-          <TransactionStatus
-            hash={hash}
-            isPending={isPending}
-            isConfirming={isConfirming}
-            isConfirmed={isConfirmed}
-            error={error}
-            onReset={handleReset}
-            chainId={chainId}
-            successMessage="Tokens transferred successfully!"
-            resetLabel="Back to token"
-          />
-        </div>
-      </div>
+      <TransactionStatus
+        hash={hash}
+        isPending={isPending}
+        isConfirming={isConfirming}
+        isConfirmed={isConfirmed}
+        error={error}
+        onReset={handleReset}
+        chainId={chainId}
+        successMessage="Tokens transferred successfully!"
+        resetLabel="Back to token"
+      />
     );
   }
 

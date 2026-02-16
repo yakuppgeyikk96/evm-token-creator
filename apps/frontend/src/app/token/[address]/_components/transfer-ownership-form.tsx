@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useTransferOwnership } from "@/hooks/use-transfer-ownership";
 import { Field } from "@/components/field";
 import { TransactionStatus } from "@/components/transaction-status";
@@ -42,28 +41,17 @@ export function TransferOwnershipForm({
 
   if (hash) {
     return (
-      <div>
-        <Link
-          href="/my-tokens"
-          className="text-sm text-zinc-400 transition-colors hover:text-white"
-        >
-          &larr; Back to My Tokens
-        </Link>
-        <div className="mt-6">
-          <h1 className="text-2xl font-bold">Transfer Ownership — {tokenSymbol}</h1>
-          <TransactionStatus
-            hash={hash}
-            isPending={isPending}
-            isConfirming={isConfirming}
-            isConfirmed={isConfirmed}
-            error={error}
-            onReset={handleReset}
-            chainId={chainId}
-            successMessage="Ownership transferred successfully!"
-            resetLabel="Back to token"
-          />
-        </div>
-      </div>
+      <TransactionStatus
+        hash={hash}
+        isPending={isPending}
+        isConfirming={isConfirming}
+        isConfirmed={isConfirmed}
+        error={error}
+        onReset={handleReset}
+        chainId={chainId}
+        successMessage="Ownership transferred successfully!"
+        resetLabel="Back to token"
+      />
     );
   }
 

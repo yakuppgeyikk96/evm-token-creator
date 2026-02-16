@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { usePauseToken } from "@/hooks/use-pause-token";
 import { TransactionStatus } from "@/components/transaction-status";
 
@@ -26,34 +25,21 @@ export function PauseControl({ tokenAddress, tokenSymbol, paused, chainId, onSuc
 
   if (hash) {
     return (
-      <div>
-        <Link
-          href="/my-tokens"
-          className="text-sm text-zinc-400 transition-colors hover:text-white"
-        >
-          &larr; Back to My Tokens
-        </Link>
-        <div className="mt-6">
-          <h1 className="text-2xl font-bold">
-            {paused ? "Unpause" : "Pause"} {tokenSymbol}
-          </h1>
-          <TransactionStatus
-            hash={hash}
-            isPending={isPending}
-            isConfirming={isConfirming}
-            isConfirmed={isConfirmed}
-            error={error}
-            onReset={handleReset}
-            chainId={chainId}
-            successMessage={
-              paused
-                ? "Token unpaused successfully!"
-                : "Token paused successfully!"
-            }
-            resetLabel="Back to token"
-          />
-        </div>
-      </div>
+      <TransactionStatus
+        hash={hash}
+        isPending={isPending}
+        isConfirming={isConfirming}
+        isConfirmed={isConfirmed}
+        error={error}
+        onReset={handleReset}
+        chainId={chainId}
+        successMessage={
+          paused
+            ? "Token unpaused successfully!"
+            : "Token paused successfully!"
+        }
+        resetLabel="Back to token"
+      />
     );
   }
 

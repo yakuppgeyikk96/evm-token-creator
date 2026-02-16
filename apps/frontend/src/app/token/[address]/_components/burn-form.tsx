@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { formatUnits } from "viem";
 import { useBurnToken } from "@/hooks/use-burn-token";
 import { Field } from "@/components/field";
@@ -33,28 +32,17 @@ export function BurnForm({ tokenAddress, tokenSymbol, userBalance, chainId, onSu
 
   if (hash) {
     return (
-      <div>
-        <Link
-          href="/my-tokens"
-          className="text-sm text-zinc-400 transition-colors hover:text-white"
-        >
-          &larr; Back to My Tokens
-        </Link>
-        <div className="mt-6">
-          <h1 className="text-2xl font-bold">Burn {tokenSymbol}</h1>
-          <TransactionStatus
-            hash={hash}
-            isPending={isPending}
-            isConfirming={isConfirming}
-            isConfirmed={isConfirmed}
-            error={error}
-            onReset={handleReset}
-            chainId={chainId}
-            successMessage="Tokens burned successfully!"
-            resetLabel="Back to token"
-          />
-        </div>
-      </div>
+      <TransactionStatus
+        hash={hash}
+        isPending={isPending}
+        isConfirming={isConfirming}
+        isConfirmed={isConfirmed}
+        error={error}
+        onReset={handleReset}
+        chainId={chainId}
+        successMessage="Tokens burned successfully!"
+        resetLabel="Back to token"
+      />
     );
   }
 
